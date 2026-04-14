@@ -1,0 +1,48 @@
+.filter-panel {
+  padding: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.filter-panel__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.filter-panel__header h2 {
+  margin: 0 0 6px;
+}
+
+.filter-panel__header p {
+  color: #5c6c7c;
+}
+
+.filter-panel__reset {
+  align-self: start;
+  background: #eaf2f6;
+  color: #0e3a5a;
+}
+
+.filter-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 760px) {
+  .filter-panel__header {
+    display: block;
+  }
+
+  .filter-panel__reset {
+    margin-top: 12px;
+  }
+
+  .filter-panel__grid {
+    grid-template-columns: 1fr;
+  }
+}

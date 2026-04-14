@@ -1,0 +1,42 @@
+.app-shell {
+  position: relative;
+  min-height: 100svh;
+  overflow-x: clip;
+}
+
+.app-shell__content {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, calc(100% - 32px));
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.app-shell__ambient {
+  position: fixed;
+  inset-block-start: -120px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(24px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.app-shell__ambient--left {
+  inset-inline-start: -120px;
+  background: radial-gradient(circle, rgba(0, 173, 181, 0.22), transparent 72%);
+}
+
+.app-shell__ambient--right {
+  inset-inline-end: -120px;
+  background: radial-gradient(circle, rgba(255, 122, 89, 0.18), transparent 72%);
+}
+
+@media (max-width: 768px) {
+  .app-shell__content {
+    width: min(100% - 20px, 1240px);
+    padding-top: 20px;
+  }
+}
