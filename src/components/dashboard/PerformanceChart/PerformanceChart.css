@@ -228,7 +228,7 @@
 
 .performance-chart__line {
   fill: none;
-  stroke-width: 4;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
