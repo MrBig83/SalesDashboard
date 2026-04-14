@@ -64,6 +64,18 @@ Just nu används en lokal `.xlsx`-fil som dummy-data. MVP-tanken är att lösnin
 - Uttrycket ska vara stilrent och snyggt, men samtidigt lite flashigt och coolt.
 - Fokus just nu är därför att få ordning på appen med dummy-data, skapa en tydlig och säljbar demo och ta vidare tekniska beslut först efter att beställaren har sett konceptet.
 
+## Dynamisk länk
+
+- Målet är att den delbara länken på sikt ska vara max 8 tecken efter domänen.
+- Det är tekniskt möjligt med 8 tecken, men inte som en riktig delbar lösning enbart i frontend.
+- En så kort länk kan inte bära hela rapportkonfigurationen i URL:en, utan måste fungera som en nyckel som slår upp sparad rapportdata.
+- För att det ska fungera mellan olika användare behövs därför delad lagring, till exempel backend, serverless-funktion eller extern datatjänst.
+- `localStorage` räcker bara för lokal demo i samma browser och är inte en riktig delningslösning.
+- En lokal prototyp är nu testad i appen: rapporturval kan sparas bakom en kort kod i stil med `GetTogether`-projektets publika länkupplägg, men utan PIN.
+- Den varianten fungerar bara i samma browserprofil eftersom uppslagningen idag ligger i `localStorage`.
+- När vi vill göra lösningen verkligt delbar behöver samma kodslagning flyttas till gemensam lagring, inte byggas om från grunden.
+- Slutsats: kodlängden är inte hindret, utan behovet av en gemensam uppslagningstjänst för rapportkonfigurationen.
+
 ## Öppen fråga framåt
 
 Behöver MVP:n visa:

@@ -11,10 +11,7 @@ export const SharePanel = ({ shareUrl, onCopy, onReset }: SharePanelProps) => (
   <section className="share-panel">
     <div>
       <h2>Dynamisk rapportlänk</h2>
-      <p>
-        Länken bygger på valda filter och valda fält. Mottagaren ser bara det
-        urvalet.
-      </p>
+      <p>Länken sparar rapporturvalet bakom en kort kod. Ingen PIN krävs.</p>
     </div>
     <code title={shareUrl}>{truncateText(shareUrl)}</code>
     <div className="share-panel__actions">

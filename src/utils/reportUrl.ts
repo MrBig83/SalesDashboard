@@ -3,6 +3,9 @@ import { allFilterValue, defaultReportFilters } from './reportFilters'
 
 export const reportRoute = '/report'
 
+export const buildSharedReportUrl = (code: string) =>
+  `${reportRoute}/${encodeURIComponent(code)}`
+
 export const buildReportUrl = (filters: ReportFilters, selectedFields: string[]) => {
   const params = new URLSearchParams()
 

@@ -11,14 +11,17 @@ import type { ReportDeliveryMode, ReportFilters } from '../types/report'
 import { defaultReportFilters } from '../utils/reportFilters'
 import {
   buildReportUrl,
+  buildSharedReportUrl,
   parseFieldIdsFromUrl,
   parseReportFiltersFromUrl,
 } from '../utils/reportUrl'
+import { upsertSharedReport } from '../utils/sharedReportStore'
 
 interface ReportContextValue {
   filters: ReportFilters
   selectedFieldIds: string[]
   deliveryMode: ReportDeliveryMode
+  shareCode: string
   shareUrl: string
   setFilter: <K extends keyof ReportFilters>(key: K, value: ReportFilters[K]) => void
   toggleField: (fieldId: string) => void
@@ -35,6 +38,7 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
   const [filters, setFilters] = useState<ReportFilters>(defaultReportFilters)
   const [selectedFieldIds, setSelectedFieldIds] = useState(defaultSelectedFieldIds)
   const [deliveryMode, setDeliveryMode] = useState<ReportDeliveryMode>('link')
+  const [shareCode, setShareCode] = useState('')
 
   useEffect(() => {
     setFilters(parseReportFiltersFromUrl(window.location.search))
@@ -87,10 +91,25 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
     setDeliveryMode('link')
   }
 
-  const shareUrl = useMemo(
-    () => buildReportUrl(filters, selectedFieldIds),
-    [filters, selectedFieldIds],
-  )
+  useEffect(() => {
+    const sharedReport = upsertSharedReport(
+      shareCode || null,
+      filters,
+      selectedFieldIds,
+    )
+
+    if (sharedReport.code !== shareCode) {
+      setShareCode(sharedReport.code)
+    }
+  }, [filters, selectedFieldIds, shareCode])
+
+  const shareUrl = useMemo(() => {
+    if (!shareCode) {
+      return buildReportUrl(filters, selectedFieldIds)
+    }
+
+    return buildSharedReportUrl(shareCode)
+  }, [filters, selectedFieldIds, shareCode])
 
   useEffect(() => {
     if (window.location.pathname !== '/') {
@@ -133,6 +152,7 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
       filters,
       selectedFieldIds,
       deliveryMode,
+      shareCode,
       shareUrl,
       setFilter,
       toggleField,
@@ -142,7 +162,7 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
       resetFilters,
       resetSelection,
     }),
-    [deliveryMode, filters, selectedFieldIds, shareUrl],
+    [deliveryMode, filters, selectedFieldIds, shareCode, shareUrl],
   )
 
   return <ReportContext.Provider value={value}>{children}</ReportContext.Provider>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import logo from '../../../assets/brand/logo.png'
 import { useDataContext } from '../../../hooks/useDataContext'
@@ -8,6 +8,7 @@ import {
   parseFieldIdsFromUrl,
   parseReportFiltersFromUrl,
 } from '../../../utils/reportUrl'
+import { getSharedReportByCode } from '../../../utils/sharedReportStore'
 import { Reveal } from '../../common/Reveal/Reveal'
 import { ReportCharts } from '../ReportCharts/ReportCharts'
 import { ReportDocument } from '../ReportDocument/ReportDocument'
@@ -16,14 +17,22 @@ import './PublicReport.css'
 export const PublicReport = () => {
   const { records, fields, isLoading, error } = useDataContext()
   const location = useLocation()
+  const { shareCode } = useParams()
+
+  const sharedReport = useMemo(
+    () => (shareCode ? getSharedReportByCode(shareCode) : null),
+    [shareCode],
+  )
 
   const filters = useMemo(
-    () => parseReportFiltersFromUrl(location.search),
-    [location.search],
+    () => sharedReport?.filters ?? parseReportFiltersFromUrl(location.search),
+    [location.search, sharedReport],
   )
   const selectedFieldIds = useMemo(
-    () => parseFieldIdsFromUrl(new URLSearchParams(location.search).get('fields')),
-    [location.search],
+    () =>
+      sharedReport?.selectedFieldIds ??
+      parseFieldIdsFromUrl(new URLSearchParams(location.search).get('fields')),
+    [location.search, sharedReport],
   )
 
   const visibleFields = useMemo(() => {
@@ -45,6 +54,14 @@ export const PublicReport = () => {
 
   if (error) {
     return <section className="public-report">{error}</section>
+  }
+
+  if (shareCode && !sharedReport) {
+    return (
+      <section className="public-report">
+        Delad rapport hittades inte. Koden finns inte sparad i den här webbläsaren.
+      </section>
+    )
   }
 
   return (

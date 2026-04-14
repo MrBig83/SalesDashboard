@@ -14,6 +14,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
             <Route path="/report" element={<PublicReport />} />
+            <Route path="/report/:shareCode" element={<PublicReport />} />
           </Routes>
         </AppShell>
       </ReportProvider>
