@@ -7,7 +7,7 @@ import {
 } from 'react'
 
 import { defaultSelectedFieldIds } from '../constants/columnConfig'
-import type { ReportDeliveryMode, ReportFilters } from '../types/report'
+import type { ReportFilters } from '../types/report'
 import { defaultReportFilters } from '../utils/reportFilters'
 import {
   buildReportUrl,
@@ -20,31 +20,38 @@ import { upsertSharedReport } from '../utils/sharedReportStore'
 interface ReportContextValue {
   filters: ReportFilters
   selectedFieldIds: string[]
-  deliveryMode: ReportDeliveryMode
   shareCode: string
   shareUrl: string
   setFilter: <K extends keyof ReportFilters>(key: K, value: ReportFilters[K]) => void
   toggleField: (fieldId: string) => void
   selectAllFields: (fieldIds: string[]) => void
   clearAllFields: () => void
-  setDeliveryMode: (mode: ReportDeliveryMode) => void
   resetFilters: () => void
   resetSelection: () => void
 }
 
 export const ReportContext = createContext<ReportContextValue | null>(null)
 
+const getCurrentRouteSearch = () => {
+  const hash = window.location.hash.startsWith('#')
+    ? window.location.hash.slice(1)
+    : window.location.hash
+  const queryStart = hash.indexOf('?')
+
+  return queryStart >= 0 ? hash.slice(queryStart) : window.location.search
+}
+
 export const ReportProvider = ({ children }: PropsWithChildren) => {
   const [filters, setFilters] = useState<ReportFilters>(defaultReportFilters)
   const [selectedFieldIds, setSelectedFieldIds] = useState(defaultSelectedFieldIds)
-  const [deliveryMode, setDeliveryMode] = useState<ReportDeliveryMode>('link')
   const [shareCode, setShareCode] = useState('')
 
   useEffect(() => {
-    setFilters(parseReportFiltersFromUrl(window.location.search))
+    const routeSearch = getCurrentRouteSearch()
+    setFilters(parseReportFiltersFromUrl(routeSearch))
 
     const nextFields = parseFieldIdsFromUrl(
-      new URLSearchParams(window.location.search).get('fields'),
+      new URLSearchParams(routeSearch).get('fields'),
     )
 
     if (nextFields.length > 0) {
@@ -88,7 +95,6 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
   const resetSelection = () => {
     setFilters(defaultReportFilters)
     setSelectedFieldIds(defaultSelectedFieldIds)
-    setDeliveryMode('link')
   }
 
   useEffect(() => {
@@ -112,7 +118,9 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
   }, [filters, selectedFieldIds, shareCode])
 
   useEffect(() => {
-    if (window.location.pathname !== '/') {
+    const hashPath = window.location.hash.slice(1).split('?')[0] || '/'
+
+    if (hashPath !== '/') {
       return
     }
 
@@ -143,7 +151,9 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
     }
 
     const query = params.toString()
-    const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}`
+    const nextUrl = `${window.location.pathname}${window.location.search}#/${
+      query ? `?${query}` : ''
+    }`
     window.history.replaceState({}, '', nextUrl)
   }, [filters, selectedFieldIds])
 
@@ -151,18 +161,16 @@ export const ReportProvider = ({ children }: PropsWithChildren) => {
     () => ({
       filters,
       selectedFieldIds,
-      deliveryMode,
       shareCode,
       shareUrl,
       setFilter,
       toggleField,
       selectAllFields,
       clearAllFields,
-      setDeliveryMode,
       resetFilters,
       resetSelection,
     }),
-    [deliveryMode, filters, selectedFieldIds, shareCode, shareUrl],
+    [filters, selectedFieldIds, shareCode, shareUrl],
   )
 
   return <ReportContext.Provider value={value}>{children}</ReportContext.Provider>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { AdminDashboard } from './components/dashboard/AdminDashboard/AdminDashboard'
 import { AppShell } from './components/layout/AppShell/AppShell'
@@ -7,7 +7,7 @@ import { DataProvider } from './contexts/DataContext'
 import { ReportProvider } from './contexts/ReportContext'
 
 const App = () => (
-  <BrowserRouter>
+  <HashRouter>
     <DataProvider>
       <ReportProvider>
         <AppShell>
@@ -20,7 +20,7 @@ const App = () => (
         </AppShell>
       </ReportProvider>
     </DataProvider>
-  </BrowserRouter>
+  </HashRouter>
 )
 
 export default App

@@ -9,7 +9,6 @@ import { Reveal } from '../../common/Reveal/Reveal'
 import { ReportDocument } from '../../report/ReportDocument/ReportDocument'
 import { DashboardHero } from '../DashboardHero/DashboardHero'
 import { DataTable } from '../DataTable/DataTable'
-import { DeliveryOptions } from '../DeliveryOptions/DeliveryOptions'
 import { FieldSelector } from '../FieldSelector/FieldSelector'
 import { FilterPanel } from '../FilterPanel/FilterPanel'
 import { PerformanceChart } from '../PerformanceChart/PerformanceChart'
@@ -41,13 +40,11 @@ export const AdminDashboard = () => {
   const {
     filters,
     selectedFieldIds,
-    deliveryMode,
     shareUrl,
     setFilter,
     toggleField,
     selectAllFields,
     clearAllFields,
-    setDeliveryMode,
     resetFilters,
     resetSelection,
   } = useReportContext()
@@ -103,7 +100,6 @@ export const AdminDashboard = () => {
   }
 
   const handleExportPdf = () => {
-    setDeliveryMode('pdf')
     window.requestAnimationFrame(() => {
       const previousTitle = document.title
       document.title = 'Tasting report'
@@ -142,7 +138,6 @@ export const AdminDashboard = () => {
             onFilterChange={setFilter}
             onResetFilters={resetFilters}
           />
-          <DeliveryOptions deliveryMode={deliveryMode} onChange={setDeliveryMode} />
         </Reveal>
 
         <Reveal className="admin-dashboard__column">

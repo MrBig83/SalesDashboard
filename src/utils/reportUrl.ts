@@ -3,8 +3,18 @@ import { allFilterValue, defaultReportFilters } from './reportFilters'
 
 export const reportRoute = '/report'
 
+const getAppPath = () => {
+  const pathname = window.location.pathname
+
+  if (pathname.endsWith('/')) {
+    return pathname
+  }
+
+  return pathname.includes('.') ? pathname.replace(/\/[^/]*$/, '/') : `${pathname}/`
+}
+
 export const buildSharedReportUrl = (code: string) =>
-  `${reportRoute}/${encodeURIComponent(code)}`
+  `${getAppPath()}#${reportRoute}/${encodeURIComponent(code)}`
 
 export const buildReportUrl = (filters: ReportFilters, selectedFields: string[]) => {
   const params = new URLSearchParams()
@@ -34,7 +44,7 @@ export const buildReportUrl = (filters: ReportFilters, selectedFields: string[])
   }
 
   const query = params.toString()
-  return `${reportRoute}${query ? `?${query}` : ''}`
+  return `${getAppPath()}#${reportRoute}${query ? `?${query}` : ''}`
 }
 
 export const parseFieldIdsFromUrl = (value: string | null) =>
