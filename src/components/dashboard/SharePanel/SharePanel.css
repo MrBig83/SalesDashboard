@@ -26,6 +26,21 @@
   text-overflow: ellipsis;
 }
 
+.share-panel__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  color: #17324a;
+  font-weight: 600;
+}
+
+.share-panel__option input {
+  width: 18px;
+  height: 18px;
+  accent-color: #00adb5;
+}
+
 .share-panel__actions {
   display: flex;
   flex-wrap: wrap;

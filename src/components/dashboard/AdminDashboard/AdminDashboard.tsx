@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useDataContext } from '../../../hooks/useDataContext'
 import { useReportContext } from '../../../hooks/useReportContext'
@@ -28,6 +28,7 @@ const getNumericAverage = (values: (string | number | null)[]) => {
 }
 
 export const AdminDashboard = () => {
+  const [includePdfRecords, setIncludePdfRecords] = useState(true)
   const {
     records,
     fields,
@@ -101,6 +102,16 @@ export const AdminDashboard = () => {
     await navigator.clipboard.writeText(`${window.location.origin}${shareUrl}`)
   }
 
+  const handleExportPdf = () => {
+    setDeliveryMode('pdf')
+    window.requestAnimationFrame(() => {
+      const previousTitle = document.title
+      document.title = 'Tasting report'
+      window.print()
+      document.title = previousTitle
+    })
+  }
+
   if (isLoading) {
     return <section className="admin-dashboard__state">Laddar rapportdata...</section>
   }
@@ -137,7 +148,10 @@ export const AdminDashboard = () => {
         <Reveal className="admin-dashboard__column">
           <SharePanel
             shareUrl={`${window.location.origin}${shareUrl}`}
+            includePdfRecords={includePdfRecords}
             onCopy={() => void handleCopyShareUrl()}
+            onExportPdf={handleExportPdf}
+            onIncludePdfRecordsChange={setIncludePdfRecords}
             onReset={resetSelection}
           />
         </Reveal>
@@ -153,13 +167,14 @@ export const AdminDashboard = () => {
         />
       </Reveal>
 
-      <Reveal>
+      <Reveal className="admin-dashboard__pdf-export">
         <ReportDocument
           title="Rapportförhandsvisning"
           subtitle="Det här dokumentet är samma strukturella bas som senare kan återanvändas för PDF-export."
           fields={visibleFields}
           records={filteredRecords}
           filters={filters}
+          showRecords={includePdfRecords}
         />
       </Reveal>
 

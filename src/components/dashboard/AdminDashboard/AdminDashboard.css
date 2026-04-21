@@ -39,3 +39,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media print {
+  @page {
+    margin: 0;
+    size: A4;
+  }
+
+  :root,
+  body {
+    background: #fff;
+  }
+
+  .app-shell,
+  .app-shell__content,
+  .admin-dashboard {
+    display: block;
+    width: auto;
+    max-width: none;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .app-shell__ambient,
+  .admin-dashboard > :not(.admin-dashboard__pdf-export) {
+    display: none;
+  }
+
+  .admin-dashboard__pdf-export,
+  .admin-dashboard__pdf-export.reveal {
+    display: block;
+    opacity: 1;
+    transform: none;
+  }
+}

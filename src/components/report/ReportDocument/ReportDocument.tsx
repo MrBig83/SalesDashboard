@@ -1,3 +1,4 @@
+import logo from '../../../assets/brand/logo.png'
 import type { DataField, DataRecord, ReportFilters } from '../../../types/report'
 import { formatDate, formatNumber } from '../../../utils/formatters'
 import { allFilterValue } from '../../../utils/reportFilters'
@@ -9,6 +10,7 @@ interface ReportDocumentProps {
   fields: DataField[]
   records: DataRecord[]
   filters: ReportFilters
+  showRecords?: boolean
   variant?: 'dashboard' | 'shared'
 }
 
@@ -60,6 +62,7 @@ export const ReportDocument = ({
   fields,
   records,
   filters,
+  showRecords = true,
   variant = 'dashboard',
 }: ReportDocumentProps) => {
   const totalPurchases = records.reduce(
@@ -74,10 +77,13 @@ export const ReportDocument = ({
   return (
     <section className={`report-document report-document--${variant}`}>
       <header className="report-document__header">
-        <div>
-          <span className="report-document__eyebrow">Rapportdokument</span>
-          <h2>{title}</h2>
-          <p>{subtitle}</p>
+        <div className="report-document__brand-row">
+          <img src={logo} alt="Brand logo" className="report-document__logo" />
+          <div className="report-document__title-block">
+            <span className="report-document__eyebrow">Rapportdokument</span>
+            <h2>{title}</h2>
+            <p>{subtitle}</p>
+          </div>
         </div>
         <div className="report-document__summary">
           <div>
@@ -101,18 +107,20 @@ export const ReportDocument = ({
         ))}
       </div>
 
-      <div className="report-document__records">
-        {records.map((record) => (
-          <article key={record.id} className="report-document__card">
-            {fields.map((field) => (
-              <div key={field.id} className="report-document__row">
-                <span>{field.shortLabel}</span>
-                <strong>{renderValue(field, record[field.id])}</strong>
-              </div>
-            ))}
-          </article>
-        ))}
-      </div>
+      {showRecords && (
+        <div className="report-document__records">
+          {records.map((record) => (
+            <article key={record.id} className="report-document__card">
+              {fields.map((field) => (
+                <div key={field.id} className="report-document__row">
+                  <span>{field.shortLabel}</span>
+                  <strong>{renderValue(field, record[field.id])}</strong>
+                </div>
+              ))}
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

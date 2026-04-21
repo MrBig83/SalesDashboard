@@ -13,7 +13,7 @@ export const DeliveryOptions = ({
   <section className="delivery-options">
     <div className="delivery-options__header">
       <h2>Rapportvägar</h2>
-      <p>Byggd för två utleveranssätt: delningslänk nu, PDF i nästa steg.</p>
+      <p>Byggd för två utleveranssätt: delningslänk och PDF från samma rapporturval.</p>
     </div>
     <div className="delivery-options__grid">
       <button
@@ -30,7 +30,7 @@ export const DeliveryOptions = ({
         onClick={() => onChange('pdf')}
       >
         <strong>PDF-export</strong>
-        <span>Förberedd i strukturen. Renderas senare från samma rapportdokument.</span>
+        <span>Aktiv. Skapar PDF via webbläsarens utskriftsdialog.</span>
       </button>
     </div>
   </section>
